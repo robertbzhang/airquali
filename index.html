@@ -5,7 +5,7 @@
   <div id="aqi"></div>
   <script type="text/javascript" async>
     const userAction = async () => {
-      const response = await fetch('https://www.airnowapi.org/aq/observation/latLong/current/?format=application/json&latitude=47.5857&longitude=-122.0345&distance=25&API_KEY=AC6C5856-E038-4EE7-A106-5FA8E40F6F5A');
+      const response = await fetch('https://cors-anywhere.herokuapp.com/www.airnowapi.org/aq/observation/latLong/current/?format=application/json&latitude=47.5857&longitude=-122.0345&distance=25&API_KEY=AC6C5856-E038-4EE7-A106-5FA8E40F6F5A', { mode: 'cors' });
       const myJson = await response.json();
       console.log(myJson);
       const element = document.querySelector("div#aqi");
