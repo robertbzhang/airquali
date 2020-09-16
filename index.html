@@ -11,8 +11,7 @@
 
 <body>
   <div id="title">Air Quality Lookup</div>
-  <div id="subtitle">We ask for your location to quickly look up the air quality in your area, and will use this data
-    for nothing else. All data is courtesy of AirNow.</div>
+  <div id="subtitle"></div>
   <div id="aqi-header"></div>
   <div id="aqi"></div>
   <div id="loader" class="hidden"></div>
@@ -87,6 +86,8 @@
       console.log(siteDataJson);
       const result = myJson.find(json => json.ParameterName === "PM2.5");
       console.log(result);
+      document.getElementById("title").remove();
+      document.getElementById("subtitle").remove();
       document.getElementById("aqi-header").innerHTML = "AQI in " + result.ReportingArea + ":";
       document.getElementById("aqi").innerHTML = result.AQI;
       document.getElementById("loader").remove();
@@ -99,16 +100,8 @@
       });
     }
 
-    const error = () => {
-      document.getElementById("loader").remove();
-      document.getElementById("subtitle").remove();
-      document.getElementById("aqi-header").innerHTML = "Location not shared";
-    }
-
     async function run() {
       document.getElementById("loader").classList.remove("hidden");
-      document.getElementById("title").remove();
-      document.getElementById("subtitle").remove();
 
       const ip = await fetch('https://cors-anywhere.herokuapp.com/api.ipify.org?format=json');
       const ipAddress = await ip.json()
