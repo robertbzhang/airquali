@@ -12,7 +12,7 @@
 <body>
   <div id="title">Air Quality Lookup</div>
   <div id="subtitle">We ask for your location to quickly look up the air quality in your area, and will use this data
-    for nothing else.</div>
+    for nothing else. All data is courtesy of AirNow.</div>
   <div id="aqi-header"></div>
   <div id="aqi"></div>
   <div id="loader" class="hidden"></div>
@@ -22,6 +22,11 @@
   <div id="popup2"></div>
   <div id="popup3"></div>
   <div id="popup4"></div>
+  <div id="popup5"></div>
+  <div id="popup6"></div>
+  <div id="popup7"></div>
+  <div id="popup8"></div>
+  <div id="popup9"></div>
   <script type="text/javascript">
     const showPosition = async (position) => {
       document.getElementById("loader").classList.remove("hidden");
@@ -88,10 +93,10 @@
       const result = myJson.find(json => json.ParameterName === "PM2.5");
       console.log(result);
       document.getElementById("aqi-header").innerHTML = "AQI in " + result.ReportingArea + ":";
-      document.getElementById("aqi").innerHTML = result.AQI + " " + result.Latitude + " " + result.Longitude;
+      document.getElementById("aqi").innerHTML = result.AQI;
       document.getElementById("loader").remove();
       var map = new google.maps.Map(document.getElementById('map'), { zoom: 10, center: { lat: latitude, lng: longitude }, disableDefaultUI: true });
-      siteDataJson.slice(0, 5).forEach((site, i) => {
+      siteDataJson.slice(0, 10).forEach((site, i) => {
         const popup = document.getElementById("popup" + i);
         popup.innerHTML = site.AQI;
         var marker = new Popup(new google.maps.LatLng(site.Latitude, site.Longitude), popup);
