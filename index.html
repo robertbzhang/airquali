@@ -4,28 +4,19 @@
 <head>
   <title>AQI Lookup</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+    content="Look up the air quality near your without a single click. All data is from AirNow, the most accurate AQI provider in the U.S.">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400">
   <link rel="stylesheet" href="index.css">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 
 <body>
-  <div id="title">Air Quality Lookup</div>
-  <div id="subtitle"></div>
+  <div id="loading-text">Looking up your air quality...</div>
   <div id="aqi-header"></div>
   <div id="aqi"></div>
   <div id="loader" class="hidden"></div>
   <div id="map"></div>
-  <div id="popup0"></div>
-  <div id="popup1"></div>
-  <div id="popup2"></div>
-  <div id="popup3"></div>
-  <div id="popup4"></div>
-  <div id="popup5"></div>
-  <div id="popup6"></div>
-  <div id="popup7"></div>
-  <div id="popup8"></div>
-  <div id="popup9"></div>
   <script type="text/javascript">
     let latitude, longitude;
     const fetchData = async () => {
@@ -86,15 +77,26 @@
       console.log(siteDataJson);
       const result = myJson.find(json => json.ParameterName === "PM2.5");
       console.log(result);
-      document.getElementById("title").remove();
-      document.getElementById("subtitle").remove();
+      document.getElementById("loading-text").remove();
       document.getElementById("aqi-header").innerHTML = "AQI in " + result.ReportingArea + ":";
       document.getElementById("aqi").innerHTML = result.AQI;
+      // if (result.AQI < 50) document.getElementById("aqi").classList.add("green");
+      // else if (result.AQI < 100) document.getElementById("aqi").classList.add("yellow");
+      // else if (result.AQI < 150) document.getElementById("aqi").classList.add("orange");
+      // else if (result.AQI < 200) document.getElementById("aqi").classList.add("red");
+      // else if (result.AQI < 250) document.getElementById("aqi").classList.add("purple");
+      // else document.getElementById("aqi").classList.add("maroon");
       document.getElementById("loader").remove();
       var map = new google.maps.Map(document.getElementById('map'), { zoom: 9, center: { lat: latitude, lng: longitude }, disableDefaultUI: true });
-      siteDataJson.slice(0, 10).forEach((site, i) => {
-        const popup = document.getElementById("popup" + i);
+      siteDataJson.forEach((site, i) => {
+        const popup = document.createElement('div');
         popup.innerHTML = site.AQI;
+        // if (result.AQI < 50) popup.classList.add("green");
+        // else if (result.AQI < 100) popup.classList.add("yellow");
+        // else if (result.AQI < 150) popup.classList.add("orange");
+        // else if (result.AQI < 200) popup.classList.add("red");
+        // else if (result.AQI < 250) popup.classList.add("purple");
+        // else document.getElementById("aqi").classList.add("maroon");
         var marker = new Popup(new google.maps.LatLng(site.Latitude, site.Longitude), popup);
         marker.setMap(map);
       });

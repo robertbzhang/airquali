@@ -11,14 +11,60 @@ body {
   visibility: hidden;
 }
 
-#title {
-  font-size: 3rem;
+.green {
+  color: #00FF7F;
+}
+
+.yellow {
+  color: #FFFF99;
+}
+
+.orange {
+  color: 	#FF7F50;
+}
+
+.red {
+  color: #DC143C;
+}
+
+.purple {
+  color: #BA55D3;
+}
+
+.maroon {
+  color: #800000;
+}
+
+.bg-green {
+  background-color: #00FF7F;
+}
+
+.bg-yellow {
+  background-color: #FFFF99;
+}
+
+.bg-orange {
+  background-color: 	#FF7F50;
+}
+
+.bg-red {
+  background-color: #DC143C;
+}
+
+.bg-purple {
+  background-color: #BA55D3;
+}
+
+.bg-maroon {
+  background-color: #800000;
+}
+
+#loading-text {
   text-align: center;
-  margin-bottom: 0.5rem;
 }
 
 #aqi {
-  font-size: 4rem;
+  font-size: 7rem;
   margin-bottom: 2rem;
   text-align: center;
 }
