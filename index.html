@@ -1,17 +1,34 @@
 <!doctype html>
 <html lang="en">
 
+<head>
+  <!-- <title>Robert Zhang</title> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+  <link rel="stylesheet" href="index.css">
+  <!-- <link rel="icon" type="image/x-icon" href="img/favicon.ico"> -->
+</head>
+
 <body>
+  AQI
   <div id="aqi"></div>
-  <script type="text/javascript" async>
-    const userAction = async () => {
-      const response = await fetch('https://cors-anywhere.herokuapp.com/www.airnowapi.org/aq/observation/latLong/current/?format=application/json&latitude=47.5857&longitude=-122.0345&distance=25&API_KEY=AC6C5856-E038-4EE7-A106-5FA8E40F6F5A', { mode: 'cors' });
+  <div id="loader"></div>
+  <script type="text/javascript">
+
+    const showPosition = async (position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      const response = await fetch('https://cors-anywhere.herokuapp.com/www.airnowapi.org/aq/observation/latLong/current/?format=application/json&latitude=' + latitude + '&longitude=' + longitude + '&distance=25&API_KEY=AC6C5856-E038-4EE7-A106-5FA8E40F6F5A');
       const myJson = await response.json();
-      console.log(myJson);
-      const element = document.querySelector("div#aqi");
-      element.innerHTML = myJson;
+      const result = myJson.find(json => json.ParameterName === "PM2.5");
+      console.log(result);
+      document.getElementById("aqi").innerHTML = result.AQI;
+      document.getElementById("loader").remove();
     }
-    userAction();
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    }
   </script>
 </body>
 
