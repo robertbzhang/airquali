@@ -10,6 +10,7 @@
 </head>
 
 <body>
+  <div id="aqi-header"></div>
   <div id="aqi"></div>
   <div id="loader"></div>
   <script type="text/javascript">
@@ -21,6 +22,7 @@
       const myJson = await response.json();
       const result = myJson.find(json => json.ParameterName === "PM2.5");
       console.log(result);
+      document.getElementById("aqi-header").innerHTML = "AQI in " + result.ReportingArea + ":";
       document.getElementById("aqi").innerHTML = result.AQI;
       document.getElementById("loader").remove();
     }
