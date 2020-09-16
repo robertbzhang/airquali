@@ -95,7 +95,7 @@
       document.getElementById("aqi-header").innerHTML = "AQI in " + result.ReportingArea + ":";
       document.getElementById("aqi").innerHTML = result.AQI;
       document.getElementById("loader").remove();
-      var map = new google.maps.Map(document.getElementById('map'), { zoom: 10, center: { lat: latitude, lng: longitude }, disableDefaultUI: true });
+      var map = new google.maps.Map(document.getElementById('map'), { zoom: 9, center: { lat: latitude, lng: longitude }, disableDefaultUI: true });
       siteDataJson.slice(0, 10).forEach((site, i) => {
         const popup = document.getElementById("popup" + i);
         popup.innerHTML = site.AQI;
