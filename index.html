@@ -103,9 +103,9 @@
     async function run() {
       document.getElementById("loader").classList.remove("hidden");
 
-      const ip = await fetch('https://cors-anywhere.herokuapp.com/api.ipify.org?format=json');
+      const ip = await fetch('https://api.ipify.org?format=json');
       const ipAddress = await ip.json()
-      const location = await fetch('https://cors-anywhere.herokuapp.com/www.geoplugin.net/json.gp?ip=' + ipAddress.ip);
+      const location = await fetch('https://www.geoplugin.net/json.gp?ip=' + ipAddress.ip);
       const locationJson = await location.json()
 
       latitude = parseFloat(locationJson.geoplugin_latitude);
