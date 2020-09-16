@@ -3,60 +3,39 @@ body {
   display: flex;
   align-items: center;
   flex-direction: column;
-  margin: 0 1rem;
-  margin-top: 3rem;
+  margin: 1rem 1rem;
 }
 
 .hidden {
   visibility: hidden;
 }
 
-.green {
-  color: #00FF7F;
-}
-
-.yellow {
-  color: #FFFF99;
-}
-
-.orange {
-  color: 	#FF7F50;
-}
-
-.red {
-  color: #DC143C;
-}
-
-.purple {
-  color: #BA55D3;
-}
-
-.maroon {
-  color: #800000;
-}
-
 .bg-green {
-  background-color: #00FF7F;
+  background-color: #008000;
+  color: white;
 }
 
 .bg-yellow {
-  background-color: #FFFF99;
+  background-color: #FFFF00;
 }
 
 .bg-orange {
-  background-color: 	#FF7F50;
+  background-color: 	#FFA500;
 }
 
 .bg-red {
   background-color: #DC143C;
+  color: white;
 }
 
 .bg-purple {
-  background-color: #BA55D3;
+  background-color: #800080;
+  color: white;
 }
 
 .bg-maroon {
   background-color: #800000;
+  color: white;
 }
 
 #loading-text {
@@ -64,9 +43,12 @@ body {
 }
 
 #aqi {
-  font-size: 7rem;
+  font-size: 4rem;
   margin-bottom: 2rem;
   text-align: center;
+  border-radius: 5px;
+  padding: 0 0.5rem;
+  margin-top: 1rem;
 }
 
 #loader {
@@ -106,7 +88,6 @@ body {
   left: 0;
   transform: translate(-50%, -100%);
   /* Style the bubble. */
-  background-color: white;
   padding: 5px;
   border-radius: 5px;
   font-family: sans-serif;
@@ -121,25 +102,8 @@ body {
   /* Position the div a fixed distance above the tip. */
   position: absolute;
   width: 100%;
-  bottom: 8px;
+  bottom: -16.5px;
   left: 0;
-}
-
-/* This element draws the tip. */
-.popup-bubble-anchor::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  /* Center the tip horizontally. */
-  transform: translate(-50%, 0);
-  /* The tip is a https://css-tricks.com/snippets/css/css-triangle/ */
-  width: 0;
-  height: 0;
-  /* The tip is 8px high, and 12px wide. */
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 8px solid white;
 }
 
 /* JavaScript will position this div at the bottom of the popup tip. */
