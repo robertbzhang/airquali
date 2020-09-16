@@ -28,11 +28,8 @@
   <div id="popup8"></div>
   <div id="popup9"></div>
   <script type="text/javascript">
-    const showPosition = async (position) => {
-      document.getElementById("loader").classList.remove("hidden");
-      document.getElementById("title").remove();
-      document.getElementById("subtitle").remove();
-
+    let latitude, longitude;
+    const fetchData = async () => {
       class Popup extends google.maps.OverlayView {
         constructor(position, content) {
           super();
@@ -80,8 +77,6 @@
           }
         }
       }
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
 
       const [response, siteData] = await Promise.all([
         fetch('https://cors-anywhere.herokuapp.com/www.airnowapi.org/aq/observation/latLong/current/?format=application/json&latitude=' + latitude + '&longitude=' + longitude + '&distance=25&API_KEY=AC6C5856-E038-4EE7-A106-5FA8E40F6F5A'),
@@ -102,7 +97,6 @@
         var marker = new Popup(new google.maps.LatLng(site.Latitude, site.Longitude), popup);
         marker.setMap(map);
       });
-
     }
 
     const error = () => {
@@ -111,10 +105,19 @@
       document.getElementById("aqi-header").innerHTML = "Location not shared";
     }
 
-    function run() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, error);
-      }
+    async function run() {
+      document.getElementById("loader").classList.remove("hidden");
+      document.getElementById("title").remove();
+      document.getElementById("subtitle").remove();
+
+      const ip = await fetch('https://cors-anywhere.herokuapp.com/api.ipify.org?format=json');
+      const ipAddress = await ip.json()
+      const location = await fetch('https://cors-anywhere.herokuapp.com/www.geoplugin.net/json.gp?ip=' + ipAddress.ip);
+      const locationJson = await location.json()
+
+      latitude = parseFloat(locationJson.geoplugin_latitude);
+      longitude = parseFloat(locationJson.geoplugin_longitude);
+      await fetchData();
     }
   </script>
   <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApXsQ_QBDjIS0x9pHtouGdyVwodcpEixU&callback=run">
