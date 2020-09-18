@@ -1,9 +1,14 @@
+html {
+  height: 100%;;
+}
+
 body {
   font-family: 'Roboto', sans-serif;
   display: flex;
   align-items: center;
   flex-direction: column;
-  margin: 1rem 1rem;
+  margin: 1rem;
+  height: calc(100% - 2rem);
 }
 
 .hidden {
@@ -77,8 +82,8 @@ body {
 }
 
 #map {
-  height: 400px;
   width: 100%;
+  flex: 1 1 auto
  }
 
 .popup-bubble {

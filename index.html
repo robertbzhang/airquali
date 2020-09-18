@@ -95,7 +95,13 @@
       else if (result.AQI < 250) document.getElementById("aqi").classList.add("bg-purple");
       else document.getElementById("aqi").classList.add("bg-maroon");
       document.getElementById("loader").remove();
-      var map = new google.maps.Map(document.getElementById('map'), { zoom: 9, center: { lat: latitude, lng: longitude }, disableDefaultUI: true });
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 9,
+        center: { lat: latitude, lng: longitude },
+        disableDefaultUI: true,
+        zoomControl: true,
+        fullscreenControl: true,
+      });
       google.maps.event.addListener(map, 'zoom_changed', function () {
         zoomLevel = map.getZoom();
         if (zoomLevel < mapzoom && zoomLevel < 7) {
