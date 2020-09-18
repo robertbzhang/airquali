@@ -24,58 +24,18 @@
   <div id="aqi-header"></div>
   <div id="aqi"></div>
   <div id="loader" class="hidden"></div>
+  <span>
+    <input type="checkbox" class="hidden" id="myCheck" onclick="showPurple()">
+    <label for="myCheck" class="hidden" id="myCheckLabel">Show PurpleAir data</label>
+  </span>
   <div id="map"></div>
   <div id="footer">All data is the latest from AirNow.gov. Data is only available in North America.</div>
   <script type="text/javascript">
-    let latitude, longitude, mapzoom = 9;
+    const concentrationBreakpoints = [0, 12.1, 35.5, 55.5, 150.5, 250.5, 500.5, 9999];
+    const aqiBreakpoints = [0, 51, 101, 151, 201, 301, 501, 501];
+
+    let latitude, longitude, mapzoom = 9, purpleJson, map, totalPurple, purple;
     const fetchData = async () => {
-      class Popup extends google.maps.OverlayView {
-        constructor(position, content) {
-          super();
-          this.position = position;
-          content.classList.add("popup-bubble");
-          // This zero-height div is positioned at the bottom of the bubble.
-          const bubbleAnchor = document.createElement("div");
-          bubbleAnchor.classList.add("popup-bubble-anchor");
-          bubbleAnchor.appendChild(content);
-          // This zero-height div is positioned at the bottom of the tip.
-          this.containerDiv = document.createElement("div");
-          this.containerDiv.classList.add("popup-container");
-          this.containerDiv.appendChild(bubbleAnchor);
-          // Optionally stop clicks, etc., from bubbling up to the map.
-          Popup.preventMapHitsAndGesturesFrom(this.containerDiv);
-        }
-        /** Called when the popup is added to the map. */
-        onAdd() {
-          this.getPanes().floatPane.appendChild(this.containerDiv);
-        }
-        /** Called when the popup is removed from the map. */
-        onRemove() {
-          if (this.containerDiv.parentElement) {
-            this.containerDiv.parentElement.removeChild(this.containerDiv);
-          }
-        }
-        /** Called each frame when the popup needs to draw itself. */
-        draw() {
-          const divPosition = this.getProjection().fromLatLngToDivPixel(
-            this.position
-          );
-          // Hide the popup when it is far out of view.
-          const display =
-            Math.abs(divPosition.x) < 4000 && Math.abs(divPosition.y) < 4000
-              ? "block"
-              : "none";
-
-          if (display === "block") {
-            this.containerDiv.style.left = divPosition.x + "px";
-            this.containerDiv.style.top = divPosition.y + "px";
-          }
-
-          if (this.containerDiv.style.display !== display) {
-            this.containerDiv.style.display = display;
-          }
-        }
-      }
 
       const [response, siteData] = await Promise.all([
         fetch('https://serene-sands-18677.herokuapp.com/www.airnowapi.org/aq/observation/latLong/current/?format=application/json&latitude=' + latitude + '&longitude=' + longitude + '&distance=25&API_KEY=AC6C5856-E038-4EE7-A106-5FA8E40F6F5A'),
@@ -83,9 +43,7 @@
       ]);
       const myJson = await response.json();
       const siteDataJson = await siteData.json();
-      console.log(siteDataJson);
       const result = myJson.find(json => json.ParameterName === "PM2.5");
-      console.log(result);
       document.getElementById("loading-text").remove();
       document.getElementById("aqi-header").innerHTML = "PM2.5 in " + result.ReportingArea + ":";
       document.getElementById("aqi").innerHTML = result.AQI;
@@ -96,7 +54,9 @@
       else if (result.AQI < 250) document.getElementById("aqi").classList.add("bg-purple");
       else document.getElementById("aqi").classList.add("bg-maroon");
       document.getElementById("loader").remove();
-      var map = new google.maps.Map(document.getElementById('map'), {
+      document.getElementById("myCheck").classList.remove("hidden");
+      document.getElementById("myCheckLabel").classList.remove("hidden");
+      map = new google.maps.Map(document.getElementById('map'), {
         zoom: 9,
         center: { lat: latitude, lng: longitude },
         disableDefaultUI: true,
@@ -122,7 +82,6 @@
       siteDataJson.forEach((site, i) => {
         const popup = document.createElement('div');
         popup.id = i;
-        popup.id = i;
         popup.innerHTML = site.AQI;
         let popupClass;
         if (site.AQI < 50) popupClass = "bg-green";
@@ -137,9 +96,67 @@
       });
     }
 
+    async function showPurple() {
+      console.log("ASDASDASASD")
+      console.log(document.getElementById("myCheck"))
+      document.getElementById("myCheck").classList.add("hidden");
+      // document.getElementById("myCheckLabel").innerHTML = "Show PurpleAir data";
+      if (document.getElementById("myCheck").checked) {
+        if (!purpleJson) {
+          purpleJson = await (await purple).json()
+        }
+        purpleJson.results.filter(site => site.DEVICE_LOCATIONTYPE === "outside").forEach((site, i) => {
+          const popup = document.createElement('div');
+          popup.classList.add("purple-popup");
+          if (site.Label.includes("Pine Lake")) console.log(site);
+          const concentration = parseFloat(site.PM2_5Value);
+          let low = 0, high = 1;
+          for (let i = 0; i < concentrationBreakpoints.length; i++) {
+            const breakpoint = concentrationBreakpoints[i];
+            if (breakpoint < concentration) {
+              low = i;
+              high = i + 1;
+            }
+          }
+          concentrationBreakpoints.forEach((breakpoint, i) => {
+          });
+          const aqi = Math.round((aqiBreakpoints[high] - 1 - aqiBreakpoints[low]) / (concentrationBreakpoints[high] - 0.1 - concentrationBreakpoints[low]) * (concentration - concentrationBreakpoints[low]) + aqiBreakpoints[low]);
+          popup.innerHTML = aqi;
+          if (aqi) {
+            let popupClass;
+            if (aqi < 50) popupClass = "bg-green";
+            else if (aqi < 100) popupClass = "bg-yellow";
+            else if (aqi < 150) popupClass = "bg-orange";
+            else if (aqi < 200) popupClass = "bg-red";
+            else if (aqi < 250) popupClass = "bg-purple";
+            else popupClass = "bg-maroon";
+            popup.classList.add(popupClass);
+            var marker = new Popup(new google.maps.LatLng(site.Lat, site.Lon), popup, "purple" + i);
+            marker.setMap(map);
+            totalPurple = i;
+          }
+        });
+      } else {
+        for (let i = 0; i <= totalPurple; i++) {
+          if (document.getElementById("purple" + i)) {
+            document.getElementById("purple" + i).remove();
+          }
+        }
+      }
+      document.getElementById("myCheckLabel").innerHTML = "Show PurpleAir data";
+      document.getElementById("myCheck").classList.remove("hidden");
+    }
+
     async function run() {
       document.getElementById("loader").classList.remove("hidden");
 
+      try {
+        purple = fetch('https://serene-sands-18677.herokuapp.com/www.purpleair.com/json');
+      } catch (e) {
+        console.log("FAILED")
+        document.getElementById("myCheck").remove();
+        document.getElementById("myCheckLabel").remove();
+      }
       const ip = await fetch('https://serene-sands-18677.herokuapp.com/api.ipify.org?format=json');
       const ipAddress = await ip.json()
       const location = await fetch('https://serene-sands-18677.herokuapp.com/www.geoplugin.net/json.gp?ip=' + ipAddress.ip);
@@ -147,10 +164,16 @@
 
       latitude = parseFloat(locationJson.geoplugin_latitude);
       longitude = parseFloat(locationJson.geoplugin_longitude);
+      // portland
+      // latitude = 45.5051
+      // longitude = -122.6750
+      // beijing
+      // latitude = 39.9042
+      // longitude = 116.4074
       await fetchData();
     }
   </script>
-  <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApXsQ_QBDjIS0x9pHtouGdyVwodcpEixU&callback=run">
+  <script defer src="script.js">
   </script>
 </body>
 
