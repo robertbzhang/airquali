@@ -15,6 +15,10 @@ body {
   text-align: center;
 }
 
+#aqi-header {
+  text-align: center;
+}
+
 #aqi {
   font-size: 4rem;
   margin-bottom: 2rem;

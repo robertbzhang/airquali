@@ -87,7 +87,7 @@
       const result = myJson.find(json => json.ParameterName === "PM2.5");
       console.log(result);
       document.getElementById("loading-text").remove();
-      document.getElementById("aqi-header").innerHTML = "AQI (PM2.5) in " + result.ReportingArea + ":";
+      document.getElementById("aqi-header").innerHTML = "PM2.5 in " + result.ReportingArea + ":";
       document.getElementById("aqi").innerHTML = result.AQI;
       if (result.AQI < 50) document.getElementById("aqi").classList.add("bg-green");
       else if (result.AQI < 100) document.getElementById("aqi").classList.add("bg-yellow");
