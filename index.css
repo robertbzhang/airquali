@@ -11,38 +11,6 @@ body {
   height: calc(100% - 2rem);
 }
 
-.hidden {
-  visibility: hidden;
-}
-
-.bg-green {
-  background-color: #008000;
-  color: white;
-}
-
-.bg-yellow {
-  background-color: #FFFF00;
-}
-
-.bg-orange {
-  background-color: 	#FFA500;
-}
-
-.bg-red {
-  background-color: #DC143C;
-  color: white;
-}
-
-.bg-purple {
-  background-color: #800080;
-  color: white;
-}
-
-.bg-maroon {
-  background-color: #800000;
-  color: white;
-}
-
 #loading-text {
   text-align: center;
 }
@@ -84,7 +52,12 @@ body {
 #map {
   width: 100%;
   flex: 1 1 auto
- }
+}
+
+#footer {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+}
 
 .popup-bubble {
   /* Position the bubble centred-above its parent. */
@@ -118,4 +91,36 @@ body {
   position: absolute;
   /* The max width of the info window. */
   width: 200px;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.bg-green {
+  background-color: #008000;
+  color: white;
+}
+
+.bg-yellow {
+  background-color: #FFFF00;
+}
+
+.bg-orange {
+  background-color: 	#FFA500;
+}
+
+.bg-red {
+  background-color: #DC143C;
+  color: white;
+}
+
+.bg-purple {
+  background-color: #800080;
+  color: white;
+}
+
+.bg-maroon {
+  background-color: #800000;
+  color: white;
 }
