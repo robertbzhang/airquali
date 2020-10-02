@@ -137,9 +137,7 @@
       });
     }
 
-    async function run() {
-      document.getElementById("loader").classList.remove("hidden");
-
+    async function getLocationFromIP() {
       const ip = await fetch('https://serene-sands-18677.herokuapp.com/api.ipify.org?format=json');
       const ipAddress = await ip.json()
       const location = await fetch('https://serene-sands-18677.herokuapp.com/www.geoplugin.net/json.gp?ip=' + ipAddress.ip);
@@ -148,6 +146,21 @@
       latitude = parseFloat(locationJson.geoplugin_latitude);
       longitude = parseFloat(locationJson.geoplugin_longitude);
       await fetchData();
+    }
+
+    async function run() {
+      document.getElementById("loader").classList.remove("hidden");
+
+      if (navigator.geolocation) {
+        function showPosition(position) {
+          latitude = parseFloat(position.coords.latitude);
+          longitude = parseFloat(position.coords.longitude);
+          fetchData();
+        }
+        navigator.geolocation.getCurrentPosition(showPosition, getLocationFromIP);
+      } else {
+        getLocationFromIP();
+      }
     }
   </script>
   <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApXsQ_QBDjIS0x9pHtouGdyVwodcpEixU&callback=run">
