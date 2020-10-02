@@ -25,7 +25,7 @@
   <div id="aqi"></div>
   <div id="loader" class="hidden"></div>
   <div id="map"></div>
-  <div id="footer">All data is the latest from AirNow.gov. Data is only available in North America.</div>
+  <div id="footer">All data is the latest from AirNow.gov.</div>
   <script type="text/javascript">
     let latitude, longitude, mapzoom = 9;
     const fetchData = async () => {
@@ -79,7 +79,7 @@
 
       const [response, siteData] = await Promise.all([
         fetch('https://serene-sands-18677.herokuapp.com/www.airnowapi.org/aq/observation/latLong/current/?format=application/json&latitude=' + latitude + '&longitude=' + longitude + '&distance=25&API_KEY=AC6C5856-E038-4EE7-A106-5FA8E40F6F5A'),
-        fetch('https://serene-sands-18677.herokuapp.com/www.airnowapi.org/aq/data/?parameters=PM25&BBOX=' + (longitude - 20) + ',' + (latitude - 20) + ',' + (longitude + 20) + ',' + (latitude + 20) + '&dataType=A&format=application/json&verbose=0&nowcastonly=0&includerawconcentrations=0&API_KEY=AC6C5856-E038-4EE7-A106-5FA8E40F6F5A'),
+        fetch('https://serene-sands-18677.herokuapp.com/www.airnowapi.org/aq/data/?parameters=PM25&BBOX=' + (-180) + ',' + (-90) + ',' + (180) + ',' + (90) + '&dataType=A&format=application/json&verbose=0&nowcastonly=0&includerawconcentrations=0&API_KEY=AC6C5856-E038-4EE7-A106-5FA8E40F6F5A'),
       ]);
       const myJson = await response.json();
       const siteDataJson = await siteData.json();
@@ -106,14 +106,35 @@
       });
       google.maps.event.addListener(map, 'zoom_changed', function () {
         zoomLevel = map.getZoom();
-        if (zoomLevel < mapzoom && zoomLevel < 7) {
+        if (zoomLevel < mapzoom && zoomLevel == 4) {
           siteDataJson.forEach((site, i) => {
             document.getElementById(i).innerHTML = '';
           });
         }
-        if (zoomLevel > mapzoom && zoomLevel >= 7) {
+        if (zoomLevel > mapzoom && zoomLevel == 5) {
           siteDataJson.forEach((site, i) => {
             document.getElementById(i).innerHTML = site.AQI;
+          });
+        }
+        if (zoomLevel < mapzoom && zoomLevel == 5) {
+          siteDataJson.forEach((site, i) => {
+            document.getElementById(i).classList.add("small2");
+          });
+        }
+        if (zoomLevel > mapzoom && zoomLevel == 6) {
+          siteDataJson.forEach((site, i) => {
+            document.getElementById(i).classList.remove("small2");
+            document.getElementById(i).classList.add("small1");
+          });
+        }
+        if (zoomLevel < mapzoom && zoomLevel == 6) {
+          siteDataJson.forEach((site, i) => {
+            document.getElementById(i).classList.add("small1");
+          });
+        }
+        if (zoomLevel > mapzoom && zoomLevel == 7) {
+          siteDataJson.forEach((site, i) => {
+            document.getElementById(i).classList.remove("small1");
           });
         }
         mapzoom = zoomLevel;
